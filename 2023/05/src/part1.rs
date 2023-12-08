@@ -1,32 +1,33 @@
 use std::io::stdin;
-use std::ops;
+// use std::ops;
+use itertools::Itertools;
 
 struct Mapping {
-    src: i32,
-    dest: i32,
-    len: i32,
+    src: i64,
+    dest: i64,
+    len: i64,
 }
 
 impl Mapping {
-    fn new(src: i32, dest: i32, len: i32) -> Mapping {
+    fn new(src: i64, dest: i64, len: i64) -> Mapping {
         Mapping{src, dest, len}
     }
 
-    fn contains(&self, n: i32) -> bool {
-        n >= self.src && n <= (self.src + len)
+    fn contains(&self, n: i64) -> bool {
+        n >= self.src && n <= (self.src + self.len)
     }
 
-    fn get(&self, n: i32) -> Option<i32> {
+    fn get(&self, n: i64) -> Option<i64> {
         if !self.contains(n) {
             None
         } else {
-            Some(dest + (src - n))
+            Some(self.dest + (n - self.src))
         }
     }
 }
 
 struct RangeMap {
-    ranges: Vec<Mapping>;
+    ranges: Vec<Mapping>,
 }
 
 impl RangeMap {
@@ -34,39 +35,62 @@ impl RangeMap {
         RangeMap{ranges: vec![]}
     }
 
-    fn add_map(&mut self, source: i32, dest: i32, len: i32) { 
+    fn add_map(&mut self, source: i64, dest: i64, len: i64) { 
         // assume there are no overlaps
         self.ranges.push(Mapping::new(source, dest, len));
     }
 
-    fn get(&self, n: i32) -> Option<i32> {
-        for range in ranges.iter()() {
+    fn get(&self, n: i64) -> i64 {
+        for range in self.ranges.iter() {
             if range.contains(n) {
-                return range.get(n);
+                return range.get(n).unwrap();
             }
         }
-        None
-    }
-}
-
-impl ops::Index<i32> for RangeMap {
-    type Output = i32;
-
-    fn index(&self, idx: i32) -> &i32 {
-        self.get(idx).unwrap();
+        n
     }
 }
 
 
-fn make_range_map(lines: &[String]) -> RangeMap {
-    
+fn make_range_map(lines: Vec<String>) -> RangeMap {
+    let mut ranges = RangeMap::new();
+    for line in lines.iter() {
+        let mut nums = line.split(" ").map(|n| n.parse().unwrap());
+        let dest = nums.next().unwrap();
+        let src = nums.next().unwrap();
+        let len = nums.next().unwrap();
+        ranges.add_map(src, dest, len);
+    }
+    ranges
 }
 
 
 fn main() {
-    let lines = stdin().lines();
+    let mut lines = stdin().lines();
 
-    for line in lines {
-        // do something here
-    }
+    let seed_line = lines.next().unwrap().unwrap();
+
+    let seeds = seed_line.split(" ").skip(1).map(|s| s.parse().unwrap());
+
+    let steps: Vec<RangeMap> = lines.map(|l| l.unwrap())
+         .group_by(|l| l.trim().len() == 0).into_iter()
+         .filter(|(key, _)| !key)
+         .map(|(_, group)| {
+        // skip the title, since it's consistent
+        make_range_map(group.skip(1).collect())
+    }).collect();
+
+    let min_res = seeds.map(|seed| {
+        print!("seed: {}", seed);
+        let res = steps.iter().fold(seed, |s, step| {
+            let tmp = step.get(s);
+            print!(" > {}",tmp);
+            tmp
+        });
+        
+        println!("");
+        res
+    }).min().unwrap();
+
+    println!("{}", min_res)
+
 }
