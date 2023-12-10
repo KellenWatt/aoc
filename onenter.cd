@@ -1,0 +1,84 @@
+aoc_root="$HOME/dev/aoc"
+read aoc_session_cookie < "$aoc_root/.session"
+
+function get() {
+    local year_regex='^[0-9]{4}$'
+    local day_regex='^(0?[1-9]|[1-2][0-9]|3[0-1])$'
+
+    if [[ $1 =~ $year_regex ]] ; then
+        local year=$1
+    elif [[ ${PWD##*/} =~ $year_regex ]] ; then
+        local year=${PWD##*/}
+    else
+        local year=$(date +%Y)
+    fi
+
+    if [[ $1 =~ $year_regex && $2 =~ $day_regex ]] ; then
+        local day=$2
+    elif [[ $1 =~ $day_regex ]] ; then
+        local day=$1
+    else
+        # day in E(S|D)T
+        local day=$(TZ="America/New_York" date +%d)
+    fi
+
+    local day=$(python3 -c "from sys import argv; print(int(argv[1]))" $day)
+    local padded_day=$(printf "%02d" $day)
+    
+    local year_dir="$aoc_root/$year"
+    local day_dir="$year_dir/$padded_day"
+
+    if [[ ! -d "$day_dir" ]] ; then
+        mkdir -p "$day_dir"
+    fi
+
+    cd "$day_dir" 
+
+    echo "Fetching day $day for $year"
+    local url="https://adventofcode.com/$year/day/$day/input"
+    curl --cookie "session=$aoc_session_cookie" --user-agent "KellenWatt on GitHub via curl" $url > "$day_dir/input"
+    # echo $url
+}
+
+function init {
+    if [[ -z "$1" ]] ; then
+        echo "Runs init script for specific language"
+        echo "Options:"
+        for name in $(compgen -A function init-) ; do 
+            echo -e "\t${name##*-}"
+        done
+        return
+    fi
+    if $(compgen -A function "init-$1") ; then
+        "init-$1"
+    else
+        echo "init script does not exist for $1"
+        echo "Options:"
+        for name in $(compgen -A function init-) ; do 
+            echo -e "\t${name##*-}"
+        done 
+        return 1
+    fi 
+}
+
+function init-rust {
+    cargo init --name aoc
+    rm src/main.rs
+
+    echo -e '\n[[bin]]\nname = "part1"\npath = "src/part1.rs"' >> Cargo.toml
+    echo -e '\n[[bin]]\nname = "part2"\npath = "src/part2.rs"' >> Cargo.toml
+    echo | tee src/part2.rs > src/part1.rs <<EOF
+use std::io::stdin;
+
+fn main() {
+    let lines = stdin().lines().map(|l| l.unwrap());
+
+    for line in lines {
+        // do something here
+    }
+}
+EOF
+
+}
+
+alias paste-input="pbpaste > test-input"
