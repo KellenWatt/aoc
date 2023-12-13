@@ -7,23 +7,22 @@ function get() {
 
     if [[ $1 =~ $year_regex ]] ; then
         local year=$1
+        shift         # make reading day simpler later
     elif [[ ${PWD##*/} =~ $year_regex ]] ; then
         local year=${PWD##*/}
     else
         local year=$(date +%Y)
     fi
 
-    if [[ $1 =~ $year_regex && $2 =~ $day_regex ]] ; then
-        local day=$2
-    elif [[ $1 =~ $day_regex ]] ; then
+    if [[ $1 =~ $day_regex ]] ; then
         local day=$1
     else
-        # day in E(S|D)T
+        # current day in E(S|D)T
         local day=$(TZ="America/New_York" date +%d)
     fi
 
-    local day=$(python3 -c "from sys import argv; print(int(argv[1]))" $day)
-    local padded_day=$(printf "%02d" $day)
+    local day=$((10#$day)) # strip any leading zeros
+    local padded_day=$(printf "%02d" $day) # pad with leading zeros, if necessary
     
     local year_dir="$aoc_root/$year"
     local day_dir="$year_dir/$padded_day"
