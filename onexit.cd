@@ -1,5 +1,5 @@
 unset aoc_root aoc_session_cookie
 unset -f get init init-rust
 
-unalias paste-input &>/dev/null
+unalias paste-input revisit complete &>/dev/null
 

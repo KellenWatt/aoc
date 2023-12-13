@@ -49,7 +49,7 @@ function init {
         done
         return
     fi
-    if $(compgen -A function "init-$1") ; then
+    if [[ $(compgen -A function "init-$1") ]] ; then
         "init-$1"
     else
         echo "init script does not exist for $1"
@@ -82,3 +82,5 @@ EOF
 }
 
 alias paste-input="pbpaste > test-input"
+alias revisit="touch revisit"
+alias finish="rm revisit 2>/dev/null"
