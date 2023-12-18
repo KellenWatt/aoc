@@ -80,6 +80,18 @@ EOF
 
 }
 
+function init-python {
+    echo | tee part2.py > part1.py << EOF
+import sys
+
+lines = [line.rstrip() for line in sys.stdin]
+EOF
+}
+
+function init-py {
+    init-python "$@"
+}
+
 alias paste-input="pbpaste > test-input"
 alias revisit="touch revisit"
 alias finish="rm revisit 2>/dev/null"

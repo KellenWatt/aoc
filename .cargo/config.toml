@@ -1,3 +1,3 @@
 [alias]
 part1 = "run --bin part1"
-part2 = "run --bin part2"
+part2 = "run --bin part2 --release"
