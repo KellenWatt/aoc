@@ -1,0 +1,120 @@
+digraph machine {
+fr [color=red]
+sz [color=blue]
+cs [color=red]
+mn [color=blue]
+bh [color=blue]
+tp [color=blue]
+xn [color=blue]
+md [color=blue]
+bp [color=blue]
+bb [color=blue]
+rz [color=blue]
+hf [color=blue]
+vg [color=blue]
+qm [color=blue]
+jz [color=blue]
+hz [color=blue]
+qh [color=blue]
+gk [color=blue]
+sq [color=blue]
+rh [color=blue]
+mj [color=red]
+js [color=blue]
+bx [color=blue]
+vq [color=blue]
+vr [color=blue]
+zm [color=blue]
+mb [color=blue]
+ss [color=blue]
+qs [color=red]
+nd [color=blue]
+hh [color=blue]
+lf [color=blue]
+hk [color=blue]
+cj [color=blue]
+rv [color=red]
+cv [color=blue]
+dl [color=red]
+rd [color=red]
+broadcaster [color=black]
+rs [color=red]
+mf [color=blue]
+qc [color=blue]
+bt [color=red]
+vk [color=blue]
+xq [color=blue]
+xs [color=blue]
+bz [color=blue]
+sv [color=blue]
+kl [color=blue]
+lx [color=blue]
+ks [color=blue]
+zs [color=blue]
+jb [color=blue]
+pc [color=blue]
+lr [color=blue]
+ng [color=blue]
+pz [color=blue]
+mr [color=blue]
+rx [fillcolor=green, fontcolor=white, style=filled]
+button -> broadcaster
+broadcaster -> {hh lr bp lf }
+hh -> {qs bx }
+lr -> {pz mj }
+bp -> {cs lx }
+lf -> {rh rd }
+qs -> {dl jz bx vk vg hh sz }
+bx -> {sz }
+pz -> {mj vq }
+mj -> {hz bt lr sq qh vq }
+cs -> {lx ss rv bh bp }
+lx -> {gk }
+rh -> {rd sv }
+rd -> {ng fr rz lf vr }
+dl -> {rs }
+jz -> {vk }
+vk -> {qc }
+vg -> {hf }
+sz -> {jz }
+vq -> {qm }
+hz -> {pc }
+bt -> {rs }
+sq -> {mf }
+qh -> {sq }
+ss -> {zs }
+rv -> {rs }
+bh -> {zm }
+gk -> {cs bb }
+sv -> {rd ng }
+ng -> {vr }
+fr -> {rs }
+rz -> {kl }
+vr -> {bz }
+rs -> {rx }
+qc -> {qs vg }
+hf -> {qs xq }
+qm -> {mj xn }
+pc -> {mj mr }
+mf -> {mj hz }
+zs -> {cs mn }
+zm -> {cs jb }
+bb -> {bh cs }
+kl -> {rd mb }
+bz -> {rd hk }
+xq -> {tp qs }
+xn -> {mj qh }
+mr -> {mj js }
+mn -> {cs md }
+jb -> {cj cs }
+mb -> {rd xs }
+hk -> {rz rd }
+tp -> {qs ks }
+js -> {mj }
+md -> {cs }
+cj -> {ss cs }
+xs -> {cv rd }
+ks -> {qs nd }
+cv -> {rd }
+nd -> {qs }
+}
