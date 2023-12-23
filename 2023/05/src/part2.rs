@@ -1,5 +1,8 @@
 
 // Absolute maximum: 1493867
+// correct answer: 1493866
+// I have no idea where the off-by one is coming from
+// but apparently it was from line 25 creating an inclusive range instead of an eclusive one?
 
 use std::io::stdin;
 // use std::ops;
@@ -19,7 +22,7 @@ impl Mapping {
     }
 
     fn contains(&self, n: i64) -> bool {
-        n >= self.dest && n <= (self.dest + self.len)
+        n >= self.dest && n < (self.dest + self.len)
     }
 
     fn get(&self, n: i64) -> Option<i64> {
