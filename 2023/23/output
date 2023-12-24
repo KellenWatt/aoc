@@ -1,0 +1,156 @@
+Point { x: 79, y: 41 }
+  Point { x: 85, y: 13 } = 158
+  Point { x: 99, y: 35 } = 114
+  Point { x: 83, y: 63 } = 150
+  Point { x: 63, y: 41 } = 72
+Point { x: 131, y: 35 }
+  Point { x: 99, y: 35 } = 164
+  Point { x: 129, y: 53 } = 84
+  Point { x: 105, y: 7 } = 434
+Point { x: 17, y: 77 }
+  Point { x: 13, y: 107 } = 318
+  Point { x: 39, y: 87 } = 120
+  Point { x: 17, y: 53 } = 260
+Point { x: 13, y: 107 }
+  Point { x: 17, y: 77 } = 318
+  Point { x: 31, y: 99 } = 66
+  Point { x: 43, y: 123 } = 542
+Point { x: 99, y: 35 }
+  Point { x: 131, y: 35 } = 164
+  Point { x: 109, y: 53 } = 88
+  Point { x: 105, y: 7 } = 210
+  Point { x: 79, y: 41 } = 114
+Point { x: 129, y: 53 }
+  Point { x: 137, y: 85 } = 156
+  Point { x: 109, y: 53 } = 216
+  Point { x: 131, y: 35 } = 84
+Point { x: 77, y: 101 }
+  Point { x: 85, y: 77 } = 236
+  Point { x: 67, y: 113 } = 82
+  Point { x: 111, y: 107 } = 188
+  Point { x: 83, y: 131 } = 184
+Point { x: 55, y: 89 }
+  Point { x: 55, y: 65 } = 76
+  Point { x: 39, y: 87 } = 98
+  Point { x: 85, y: 77 } = 186
+  Point { x: 67, y: 113 } = 144
+Point { x: 107, y: 75 }
+  Point { x: 137, y: 85 } = 200
+  Point { x: 85, y: 77 } = 100
+  Point { x: 109, y: 53 } = 136
+  Point { x: 111, y: 107 } = 224
+Point { x: 37, y: 61 }
+  Point { x: 17, y: 53 } = 92
+  Point { x: 41, y: 43 } = 82
+  Point { x: 39, y: 87 } = 140
+  Point { x: 55, y: 65 } = 74
+Point { x: 61, y: 11 }
+  Point { x: 85, y: 13 } = 178
+  Point { x: 63, y: 41 } = 188
+  Point { x: 29, y: 9 } = 234
+Point { x: 29, y: 9 }
+  Point { x: 61, y: 11 } = 234
+  Point { x: 41, y: 43 } = 218
+  Point { x: 19, y: 17 } = 54
+Point { x: 67, y: 113 }
+  Point { x: 55, y: 89 } = 144
+  Point { x: 77, y: 101 } = 82
+  Point { x: 53, y: 131 } = 128
+  Point { x: 31, y: 99 } = 166
+Point { x: 39, y: 87 }
+  Point { x: 55, y: 89 } = 98
+  Point { x: 37, y: 61 } = 140
+  Point { x: 31, y: 99 } = 84
+  Point { x: 17, y: 77 } = 120
+Point { x: 105, y: 7 }
+  Point { x: 85, y: 13 } = 126
+  Point { x: 131, y: 35 } = 434
+  Point { x: 99, y: 35 } = 210
+Point { x: 85, y: 77 }
+  Point { x: 55, y: 89 } = 186
+  Point { x: 77, y: 101 } = 236
+  Point { x: 107, y: 75 } = 100
+  Point { x: 83, y: 63 } = 80
+Point { x: 103, y: 131 }
+  Point { x: 135, y: 123 } = 284
+  Point { x: 111, y: 107 } = 124
+  Point { x: 83, y: 131 } = 120
+Point { x: 55, y: 65 }
+  Point { x: 37, y: 61 } = 74
+  Point { x: 63, y: 41 } = 108
+  Point { x: 55, y: 89 } = 76
+  Point { x: 83, y: 63 } = 126
+Point { x: 41, y: 43 }
+  Point { x: 37, y: 61 } = 82
+  Point { x: 29, y: 9 } = 218
+  Point { x: 63, y: 41 } = 136
+  Point { x: 13, y: 37 } = 170
+Point { x: 17, y: 53 }
+  Point { x: 17, y: 77 } = 260
+  Point { x: 13, y: 37 } = 112
+  Point { x: 37, y: 61 } = 92
+Point { x: 135, y: 123 }
+  Point { x: 103, y: 131 } = 284
+  Point { x: 135, y: 111 } = 40
+  Point { x: 139, y: 140 } = 93
+Point { x: 85, y: 13 }
+  Point { x: 105, y: 7 } = 126
+  Point { x: 61, y: 11 } = 178
+  Point { x: 79, y: 41 } = 158
+Point { x: 53, y: 131 }
+  Point { x: 67, y: 113 } = 128
+  Point { x: 83, y: 131 } = 206
+  Point { x: 43, y: 123 } = 82
+Point { x: 1, y: 0 }
+  Point { x: 19, y: 17 } = 151
+Point { x: 137, y: 85 }
+  Point { x: 129, y: 53 } = 156
+  Point { x: 107, y: 75 } = 200
+  Point { x: 135, y: 111 } = 148
+Point { x: 83, y: 131 }
+  Point { x: 77, y: 101 } = 184
+  Point { x: 103, y: 131 } = 120
+  Point { x: 53, y: 131 } = 206
+Point { x: 109, y: 53 }
+  Point { x: 129, y: 53 } = 216
+  Point { x: 107, y: 75 } = 136
+  Point { x: 99, y: 35 } = 88
+  Point { x: 83, y: 63 } = 144
+Point { x: 13, y: 37 }
+  Point { x: 19, y: 17 } = 262
+  Point { x: 41, y: 43 } = 170
+  Point { x: 17, y: 53 } = 112
+Point { x: 63, y: 41 }
+  Point { x: 61, y: 11 } = 188
+  Point { x: 79, y: 41 } = 72
+  Point { x: 55, y: 65 } = 108
+  Point { x: 41, y: 43 } = 136
+Point { x: 139, y: 140 }
+  Point { x: 135, y: 123 } = 93
+Point { x: 83, y: 63 }
+  Point { x: 79, y: 41 } = 150
+  Point { x: 55, y: 65 } = 126
+  Point { x: 109, y: 53 } = 144
+  Point { x: 85, y: 77 } = 80
+Point { x: 43, y: 123 }
+  Point { x: 31, y: 99 } = 104
+  Point { x: 53, y: 131 } = 82
+  Point { x: 13, y: 107 } = 542
+Point { x: 135, y: 111 }
+  Point { x: 137, y: 85 } = 148
+  Point { x: 135, y: 123 } = 40
+  Point { x: 111, y: 107 } = 136
+Point { x: 111, y: 107 }
+  Point { x: 103, y: 131 } = 124
+  Point { x: 77, y: 101 } = 188
+  Point { x: 107, y: 75 } = 224
+  Point { x: 135, y: 111 } = 136
+Point { x: 31, y: 99 }
+  Point { x: 13, y: 107 } = 66
+  Point { x: 43, y: 123 } = 104
+  Point { x: 39, y: 87 } = 84
+  Point { x: 67, y: 113 } = 166
+Point { x: 19, y: 17 }
+  Point { x: 1, y: 0 } = 151
+  Point { x: 29, y: 9 } = 54
+  Point { x: 13, y: 37 } = 262
