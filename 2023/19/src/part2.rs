@@ -4,211 +4,121 @@ use std::convert::Infallible;
 use std::sync::OnceLock;
 use regex::Regex;
 use std::collections::HashMap;
-use std::ops::{RangeInclusive, Range};
 
-// Inclusive range
-struct SubRange {
-    start: isize,
-    end: isize,
-}
-
-impl SubRange {
-    fn empty() -> SubRange {
-        SubRange{1, 0}
-    }
-
-    fn overlaps(&self, other: &SubRange) -> bool {
-        !(self.is_empty() || other.is_empty())
-        self.start < other.end && !(self.end < other.start) ||
-            other.start < self.end && !(other.end < self.start)
-    }
-
-    // fn union(&self, other: &SubRange) -> Result<SubRange, ()> {
-    //     if self.overlaps(other) {
-    //         let start = self.start.min(other.start);
-    //         let end = self.end.max(other.end);
-    //         SubRange{start, end}
-    //     } else {
-    //         Err(())
-    //     }
-    // }
-
-    fn intersection(&self, other:&SubRange) -> SubRange {
-        if self.overlaps(other) {
-            let start = self.start.max(other.start);
-            let end = self.end.min(other.end);
-            SubRange{start, end}
-        } else {
-            SubRange{1, 0}
-        }
-    }
-
-    fn is_empty(&self) -> bool {
-        self.start > self.end
-    }
-}
-
-impl From<Range> for SubRange {
-    fn from(r: Range) -> SubRange {
-        SubRange{start: r.start, end: r.end-1}
-    }
-}
-
-impl From<RangeInclusive> for SubRange {
-    fn from(r: RangeInclusive) -> SubRange {
-        SubRange{start: r.start(), end: r.end()}
-    }
-}
-
-struct MultiRange {
-    ranges: Vec<SubRange>;
-}
-
-impl MultiRange {
-    fn new() -> MultiRange {
-        MultiRange{ranges: vec![]}
-    }
-
-    fn add(&mut self, s: SubRange) {
-        if self.is_empty() {
-            self.ranges.push(s);
-            return;
-        }
-        for i in 0..self.ranges.len() {
-            if self.ranges[i].overlaps(&s) {
-                let j = i;
-                while self.ranges[j].overlaps(&s) {
-                    j += 1;
-                }
-                let start = self.ranges[i].start.min(s.start);
-                let end = self.ranges[j].end.max(s.end);
-                let new_range = SubRange{start, end};
-                self.ranges.retain(|r| !r.overlaps(new_range));
-                self.ranges.insert(i, new_range);
-            }
-        }
-        
-    }
-
-    fn is_empty(&self) -> bool {
-        self.ranges.is_empty()
-    }
-}
+mod multirange;
+use crate::multirange::{SubRange, MultiRange};
 
 
-
-
-#[derive(Debug)]
-struct Part {
-    x: u64,
-    m: u64,
-    a: u64,
-    s: u64,
-    // state: State,
-}
-
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 struct AcceptablePart {
-    x: RangeInclusive<u64>,
-    m: RangeInclusive<u64>,
-    a: RangeInclusive<u64>,
-    s: RangeInclusive<u64>,
-}
-
-impl AcceptablePart {
-}
-
-// fn intersect_range(r: RangeInclusive, s: RangeInclusive) -> RangeInclusive {
-//     if r.end() < s.start() || s.end() < r.start(){
-//         // empty
-//         1..=0 
-//     } else {
-//         (r.start().max(s.start()))..=(r.end().min(s.end()))
-//     }
-// }
-// 
-// // only joins overlapping ranges. Non-overlapping ranges have an empty result
-// fn join_overlapping_range(r: RangeInclusive, s: RangeInclusive) -> RangeInclusive {
-//     if r.end() < s.start() || s.end() < r.start(){
-//         // empty
-//         1..=0 
-//     } else {
-//         (r.start().min(s.start()))..=(r.end().max(s.end()))
-//     }
-// }
-
-fn split_range(r: RangeInclusive, n: u64) -> (RangeInclusive, RangeInclusive) {
-    if n > r.end() {
-        (r, 1..=0)
-    } else if n < r.start() {
-        (1..=0, r)
-    } else {
-        (r.start()..=n, (n+1)..=r.end())
-    }
+    x: MultiRange,
+    m: MultiRange,
+    a: MultiRange,
+    s: MultiRange,
 }
 
 impl AcceptablePart {
     fn full() -> AcceptablePart {
-        let range = 1..=4000;
-        AcceptablePart(x: range, m: range, a: range, s: range)
+        let range = MultiRange::from(SubRange::from(1..=4000));
+        AcceptablePart{x: range.clone(), m: range.clone(), a: range.clone(), s: range.clone()}
     }
 
     fn empty() -> AcceptablePart {
-        let range = 1..=0;
-        AcceptablePart(x: range, m: range, a: range, s: range)
+        let range = MultiRange::new();
+        AcceptablePart{x: range.clone(), m: range.clone(), a: range.clone(), s: range.clone()}
     }
 
     fn split(mut self, field: &str, at: u64) -> (AcceptablePart, AcceptablePart) {
+        let mut m = MultiRange::new();
+        m.add(SubRange::from(1..(at as isize)));
+        let a = match field {
+            "x" => self.x.clone(),
+            "m" => self.m.clone(),
+            "a" => self.a.clone(),
+            "s" => self.s.clone(),
+            _ => unreachable!()
+        };
+        m = m.intersection(&a);
+        let inv = m.invert(SubRange::from(1..=4000)).unwrap();
+
         let mut other = self.clone();
+
         match field {
             "x" => {
-                let (a, b) = split_range(self.x);
-                self.x = a;
-                other.x = b;
+                self.x = m;
+                other.x = inv;
             },
             "m" => {
-                let (a, b) = split_range(self.m);
-                self.m = a;
-                other.m = b;
+                self.m = m;
+                other.m = inv;
             },
             "a" => {
-                let (a, b) = split_range(self.a);
-                self.a = a;
-                other.a = b;
+                self.a = m;
+                other.a = inv;
             },
             "s" => {
-                let (a, b) = split_range(self.s);
-                self.s = a;
-                other.s = b;
+                self.s = m;
+                other.s = inv;
             },
             _ => unreachable!()
         }
+        
         (self, other)
+
     }
 
-    fn count(self) -> u64 {
-        self.x.len() * self.m.len() * self.a.len() * self.s.len()
+    fn union(&self, other: &AcceptablePart) -> AcceptablePart {
+        let mut out = self.clone();
+        out.x = out.x.union(&other.x);
+        out.m = out.m.union(&other.m);
+        out.a = out.a.union(&other.a);
+        out.s = out.s.union(&other.s);
+        out
+    }
+    
+    fn intersection(&self, other: &AcceptablePart) -> AcceptablePart {
+        let mut out = self.clone();
+        out.x = out.x.intersection(&other.x);
+        out.m = out.m.intersection(&other.m);
+        out.a = out.a.intersection(&other.a);
+        out.s = out.s.intersection(&other.s);
+        out
+    }
+
+    fn invert(&self, field: &str) -> AcceptablePart {
+        let mut other = self.clone();
+        let within = SubRange::from(1..=4000);
+        match field {
+            "x" => other.x.invert(within).unwrap(),
+            "m" => other.m.invert(within).unwrap(),
+            "a" => other.a.invert(within).unwrap(),
+            "s" => other.s.invert(within).unwrap(),
+            _ => unreachable!()
+        };
+        other
+    }
+    
+    fn invert_full(&self) -> AcceptablePart {
+        let mut other = self.clone();
+        let within = SubRange::from(1..=4000);
+        other.x = other.x.invert(within).unwrap();
+        other.m = other.m.invert(within).unwrap();
+        other.a = other.a.invert(within).unwrap();
+        other.s = other.s.invert(within).unwrap();
+        other
+    }
+
+    fn count(self) -> usize {
+        self.x.size() * self.m.size() * self.a.size() * self.s.size()
     }
 }
 
-#[derive(Debug)]
-enum Rule {
-    Less(String, u64, String),
-    Greater(String, u64, String),
-    Jump(String),
-    // Accept,
-    // Reject,
+struct Rule {
+    rating: String,
+    acceptance: AcceptablePart,
+    target: String,
 }
 
-impl Rule {
-    fn target(&self) -> &String {
-        match self {
-            Rule::Less(_, _, t) => t,
-            Rule::Greater(_, _, t) => t,
-            Rule::Jump(t) => t,
-        }
-    }
-}
 
 static RULE_PATTERN: OnceLock<Regex> = OnceLock::new();
 
@@ -218,37 +128,24 @@ impl FromStr for Rule {
     fn from_str(s: &str) -> Result<Rule, Self::Err> {
         let rule = RULE_PATTERN.get_or_init(|| Regex::new(r"(?:(?<rating>[xmas])(?<op>>|<)(?<operand>\d+):)?(?<target>\w+)").unwrap());
         let caps = rule.captures(s).unwrap();
-        let target = caps.name("target").unwrap().as_str();
+        let target = caps.name("target").unwrap().as_str().to_owned();
         if let Some(rating) = caps.name("rating") {
             let rating = rating.as_str();
             let op = caps.name("op").unwrap().as_str();
             let operand = caps.name("operand").unwrap().as_str().parse().unwrap();
-            Ok(match op {
-                "<" => Rule::Less(rating.to_owned(), operand, target.to_owned()),
-                ">" => Rule::Greater(rating.to_owned(), operand, target.to_owned()),
+            let mut acceptance = AcceptablePart::full();
+            acceptance = match op {
+                "<" => acceptance.split(rating, operand).0,
+                ">" => acceptance.split(rating, operand+1).1,
                 _ => unreachable!()
-            })
+            };
+            Ok(Rule{rating: rating.to_string(), acceptance, target})
         } else {
-            Ok(Rule::Jump(target.to_owned()))
-        }
-        
-    }
-}
-
-impl Rule {
-    fn limit(&self, a: mut AcceptablePart) -> AcceptablePart {
-        match self {
-            Rule::Less(f, o, _) => a.split(f, o-1).0,
-            Rule::Greater(f, o, _) = {
-                let (_rest, me) = a.split(f, o);
-                me
-            }
-            Rule::Jump(_) => panic!("shouldn't be called here");
+            Ok(Rule{rating: "".to_string(), acceptance: AcceptablePart::full(), target})
         }
     }
 }
 
-static mut WORKFLOWS: OnceLock<HashMap<String, Workflow>> = OnceLock::new();
 
 struct Workflow {
     rules: Vec<Rule>,
@@ -263,64 +160,69 @@ impl Workflow {
         let rules = caps.name("rules").unwrap().as_str().split(",").map(|r| r.parse().unwrap());
 
         let w = Workflow{rules: rules.collect()};
-        unsafe {
-            WORKFLOWS.get_mut().unwrap().insert(name.to_owned(), w);
-        }
+        (name.to_owned(), w)
     }
 
-    fn acceptance(&self) -> AcceptablePart {
-        if self.is_final() {
-            let mut res = AcceptablePart::empty();
-            let mut rest = AcceptablePart::full();
-            for rule in self.rules.iter() {
-                let (pos, neg) = rule.limit(rest);
-                // generate all independently
-                // detect overlap between current and latter (each) 
-                // sum
-                // subtract total overlap from total
-            }
-        }
+}
+
+
+fn workflow_acceptance(name: &str, workflows: &HashMap<String, Workflow>, history: &mut HashMap<String, AcceptablePart>) -> AcceptablePart {
+    println!("checking acceptance of: {}", name);
+
+    if name == "A" {
+        return AcceptablePart::full()
+    } else if name == "R" {
+        return AcceptablePart::empty()
     }
 
-    fn is_final(&self) -> bool {
-        rules.iter().all(|r| {
-            r.target() == "A" || r.target() == "R"
-        })
+    if history.contains_key(&name.to_string()) {
+        println!("  reusing previous result");
+        return history.get(&name.to_string()).unwrap().clone();
     }
+    
+    // workflow cost union of all rules costs
+    // rule costs are intersect self, negs of all previous, and associated target
+
+    let mut mask = AcceptablePart::full();
+
+    let mut rule_acc = vec![];
+
+    let w = &workflows[name];
+    for r in w.rules.iter() {
+        println!("checking rule: {:?}", r.acceptance);
+        let a = r.acceptance.intersection(&mask);
+       
+        let a = a.intersection(&workflow_acceptance(&r.target, workflows, history));
+        println!("after checking sub-workflow: {:?}", a);
+
+        if r.rating != "" {
+            mask = mask.intersection(&r.acceptance.invert(&r.rating));
+        }
+        rule_acc.push(a);
+    }
+
+    let mut res = rule_acc.iter().fold(AcceptablePart::full(), |acc, r| {
+        acc.union(r)
+    });
+
+    println!("final workflow: {:?}", res);
+    history.insert(name.to_string(), res.clone());
+    res
 }
 
 
 fn main() {
     let lines = stdin().lines().map(|l| l.unwrap());
 
+    let mut workflows = HashMap::new();
+
     for w in lines.take_while(|l| l.trim().len() > 0) {
-        Workflow::create(&w);
-    }
+        let (name, w) = Workflow::create(&w);
+        workflows.insert(name, w);
+    }    
 
-    let mut total = 0;
-    for part in parts.iter_mut() {
-        let mut flow = &workflows["in"];
-        // println!("checking workflow 'in'");
-        // print!("rules: ");
-        // for rule in flow.rules.iter() {
-        //     print!("{:?} ", rule);
-        // }
-        // println!("");
-        while let Some(next) = flow.apply(part) {
-            // println!("checking workflow '{}'", next);
-            // print!("rules: ");
-            // for rule in flow.rules.iter() {
-            //     print!("{:?} ", rule);
-            // }
-            // println!("");
-            flow = &workflows[&next];
-        }
+    let total_acceptance = workflow_acceptance("pv", &workflows, &mut HashMap::new());
 
-        if part.accepted() {
-            total += part.rating();
-        }
-    }
-
-    println!("{}", total);
+    println!("{}", total_acceptance.count());
 
 }

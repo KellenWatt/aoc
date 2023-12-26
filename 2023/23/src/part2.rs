@@ -28,14 +28,6 @@ impl std::fmt::Display for Cell {
         write!(f, "{}", match self {
             &Cell::Tree => '\u{2588}',
             &Cell::Path => ' ',
-            // &Cell::Slope(d) => {
-            //     match d {
-            //         Dir::N => '^',
-            //         Dir::E => '>',
-            //         Dir::S => 'v',
-            //         Dir::W => '<',
-            //     }
-            // }
         })
     }
 }
@@ -57,14 +49,6 @@ impl Point {
     }
 
     fn neighbors(&self, forest: &Forest) -> Vec<Point> {
-        
-        // if let Cell::Slope(d) = forest[self] {
-        //     return if let Some(p) = self.shift(d, forest.width, forest.height) {
-        //         vec![p]
-        //     } else {
-        //         vec![]
-        //     }
-        // }
         [Dir::N, Dir::E, Dir::S, Dir::W].iter()
             .filter_map(|d| self.shift(*d, forest.width, forest.height))
             .filter_map(|p| {
@@ -73,20 +57,6 @@ impl Point {
                     _ => Some(p)
                 }
             }).collect()
-    }
-
-    fn distance(&self, other: &Point) -> usize {
-        let dx = if self.x < other.x {
-            other.x - self.x
-        } else {
-            self.x  - other.x
-        };
-        let dy = if self.y < other.y {
-            other.y - self.y
-        } else {
-            self.y - other.y
-        };
-        dx + dy
     }
 }
 
@@ -191,16 +161,6 @@ impl Graph {
         }
         Graph(nodes)
     }
-    
-    fn neighbors(&self, p: Point) -> Vec<(Point, usize)> {
-        let mut out = vec![];
-        if let Some(ns) = self.0.get(&p) {
-            for (n, dist) in ns.iter() {
-                out.push((*n, *dist))
-            }
-        }
-        out
-    }
 
     fn longest_path(&self, start: &Point, end: &Point, visited: &mut HashSet<Point>) -> Option<usize> {
         if start == end {
@@ -278,6 +238,6 @@ fn main() {
 
 
     println!("{:?}", reduced.longest_path(&start, &end, &mut HashSet::new()));
-    println!("elapsed: {}", init.elapsed().as_secs_f32());
+    println!("elapsed: {}s", init.elapsed().as_secs_f32());
     // correct answer 6534
 }
