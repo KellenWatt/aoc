@@ -81,6 +81,7 @@ function init-rust {
     cargo init --name aoc
     rm src/main.rs
 
+    echo -e '\n[features]\nverbose = []' >> Cargo.toml
     echo -e '\n[[bin]]\nname = "part1"\npath = "src/part1.rs"' >> Cargo.toml
     echo -e '\n[[bin]]\nname = "part2"\npath = "src/part2.rs"' >> Cargo.toml
     echo | tee src/part2.rs > src/part1.rs <<EOF
