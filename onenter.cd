@@ -39,6 +39,23 @@ function get() {
     # echo $url
 }
 
+function today {
+    local year=$(date +%Y)
+    local day=$(TZ="America/New_York" date +%d)
+
+    local day=$((10#$day))
+    local padded_day=$(printf "%02d" $day)
+    local year_dir="$aoc_root/$year"
+    local day_dir="$year_dir/$padded_day"
+
+    if [[ ! -d "$day_dir" ]] ; then
+        >&2 echo "Today doesn't exist. Have you gotten yet?"
+        return 1
+    fi
+
+    cd "$day_dir"
+}
+
 function init {
     if [[ -z "$1" ]] ; then
         echo "Runs init script for specific language"
@@ -87,10 +104,8 @@ import sys
 lines = [line.rstrip() for line in sys.stdin]
 EOF
 }
+alias init-py="init-python"
 
-function init-py {
-    init-python "$@"
-}
 
 alias paste-input="pbpaste > test-input"
 alias revisit="touch revisit"

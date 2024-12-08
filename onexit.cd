@@ -1,5 +1,7 @@
 unset aoc_root aoc_session_cookie
-unset -f get init init-rust
+unset -f get today init init-rust init-python
+
+unalias init-py &>/dev/null
 
 unalias paste-input revisit finish &>/dev/null
 
