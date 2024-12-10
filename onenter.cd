@@ -100,10 +100,12 @@ EOF
 
 function init-python {
     echo | tee part2.py > part1.py << EOF
+#!/usr/bin/env python3
 import sys
 
 lines = [line.rstrip() for line in sys.stdin]
 EOF
+chmod +x part2.py part1.py
 }
 alias init-py="init-python"
 
