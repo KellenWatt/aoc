@@ -87,6 +87,19 @@ function init-rust {
     echo | tee src/part2.rs > src/part1.rs <<EOF
 use std::io::stdin;
 
+macro_rules! debugln {
+    (\$(\$tts:tt)*) => {
+        #[cfg(feature = "verbose")]
+        println!(\$(\$tts)*)
+    }
+}
+macro_rules! debug {
+    (\$(\$tts:tt)*) => {
+        #[cfg(feature = "verbose")]
+        print!(\$(\$tts)*)
+    }
+}
+
 fn main() {
     let lines = stdin().lines().map(|l| l.unwrap());
 
