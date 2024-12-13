@@ -88,12 +88,20 @@ function init-rust {
 use std::io::stdin;
 
 macro_rules! debugln {
+    (\$e:expr) => {
+        #[cfg(feature = "verbose")]
+        println!("{}", \$e)
+    };
     (\$(\$tts:tt)*) => {
         #[cfg(feature = "verbose")]
         println!(\$(\$tts)*)
     }
 }
 macro_rules! debug {
+    (\$e:expr) => {
+        #[cfg(feature = "verbose")]
+        print!("{}", \$e)
+    };
     (\$(\$tts:tt)*) => {
         #[cfg(feature = "verbose")]
         print!(\$(\$tts)*)
